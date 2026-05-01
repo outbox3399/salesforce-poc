@@ -1,0 +1,32 @@
+{
+	"name": "DS_Metadata_JSON",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLSGen2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "metadata_config.json",
+				"fileSystem": "control-plane"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"ObjectName": {
+					"type": "string"
+				},
+				"IncrementalField": {
+					"type": "string"
+				},
+				"HasAttachments": {
+					"type": "boolean"
+				}
+			}
+		}
+	}
+}
