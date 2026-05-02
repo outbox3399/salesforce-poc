@@ -13,8 +13,8 @@
 					"referenceName": "LS_AzureKeyVault",
 					"type": "LinkedServiceReference"
 				},
-				"secretName": "Salesforce-Client-Secret",
-				"secretVersion": "46362d7ba4304155b73d8e3f4a4aac75"
+				"secretName": "sf-client-secret",
+				"secretVersion": "7204ce8554a44433854540a83ca9a49d"
 			},
 			"apiVersion": "52.0",
 			"authenticationType": "OAuth2ClientCredential"
