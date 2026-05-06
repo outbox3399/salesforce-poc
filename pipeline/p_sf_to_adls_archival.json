@@ -67,7 +67,7 @@
 								"source": {
 									"type": "SalesforceV2Source",
 									"query": {
-										"value": "@concat('SELECT ', item().Fields, ' FROM ', item().ObjectName, ' WHERE LastModifiedDate < LAST_N_MONTHS:3')",
+										"value": "@concat('SELECT ', item().Fields, ' FROM ', item().ObjectName)",
 										"type": "Expression"
 									},
 									"includeDeletedObjects": false,
