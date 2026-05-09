@@ -7,15 +7,19 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "azuredatafactorydiageo"
 		},
-		"Salesforce1_clientSecret": {
-			"type": "secureString",
-			"metadata": "Secure string for 'clientSecret' of 'Salesforce1'"
+		"LS_ADLSGen2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://storageacccontrolplane.dfs.core.windows.net/"
 		},
-		"Salesforce1_properties_typeProperties_environmentUrl": {
+		"LS_AzureKeyVault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://pockeyvaultdiageo.vault.azure.net/"
+		},
+		"LS_Salesforce_properties_typeProperties_environmentUrl": {
 			"type": "string",
 			"defaultValue": "https://orgfarm-fc8c4b2384-dev-ed.develop.my.salesforce.com"
 		},
-		"Salesforce1_properties_typeProperties_clientId": {
+		"LS_Salesforce_properties_typeProperties_clientId": {
 			"type": "string",
 			"defaultValue": "3MVG9VMBZCsTL9hkFslzrKTFSy3.9Tl4k4It_avkIVQWcATKwPjoLMZoudRzGldyNqfOl.JWXWll3rx7ULPFl"
 		},
@@ -46,14 +50,17 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"Salesforce1_clientSecret": {
-						"value": "[parameters('Salesforce1_clientSecret')]"
+					"LS_ADLSGen2_properties_typeProperties_url": {
+						"value": "[parameters('LS_ADLSGen2_properties_typeProperties_url')]"
 					},
-					"Salesforce1_properties_typeProperties_environmentUrl": {
-						"value": "[parameters('Salesforce1_properties_typeProperties_environmentUrl')]"
+					"LS_AzureKeyVault_properties_typeProperties_baseUrl": {
+						"value": "[parameters('LS_AzureKeyVault_properties_typeProperties_baseUrl')]"
 					},
-					"Salesforce1_properties_typeProperties_clientId": {
-						"value": "[parameters('Salesforce1_properties_typeProperties_clientId')]"
+					"LS_Salesforce_properties_typeProperties_environmentUrl": {
+						"value": "[parameters('LS_Salesforce_properties_typeProperties_environmentUrl')]"
+					},
+					"LS_Salesforce_properties_typeProperties_clientId": {
+						"value": "[parameters('LS_Salesforce_properties_typeProperties_clientId')]"
 					}
 				}
 			},
