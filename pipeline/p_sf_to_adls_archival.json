@@ -114,6 +114,49 @@
 									}
 								}
 							]
+						},
+						{
+							"name": "Check_For_Attachments",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "Copy_SF_Structured_Data",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(item().HasAttachments, true)",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Execute Pipeline1",
+										"type": "ExecutePipeline",
+										"dependsOn": [],
+										"policy": {
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "p_extract_sf_attachments",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true,
+											"parameters": {
+												"ObjectName": {
+													"value": "@item().ObjectName",
+													"type": "Expression"
+												}
+											}
+										}
+									}
+								]
+							}
 						}
 					]
 				}

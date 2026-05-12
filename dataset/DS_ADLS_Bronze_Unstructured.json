@@ -1,0 +1,33 @@
+{
+	"name": "DS_ADLS_Bronze_Unstructured",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLSGen2",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ObjectName": {
+				"type": "string"
+			},
+			"ParentId": {
+				"type": "string"
+			},
+			"FileName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "@dataset().FileName",
+				"folderPath": {
+					"value": "@concat('bronze/unstructured/', dataset().ObjectName, '/', dataset().ParentId)",
+					"type": "Expression"
+				},
+				"fileSystem": "datalake"
+			}
+		}
+	}
+}

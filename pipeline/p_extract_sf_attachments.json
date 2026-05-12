@@ -1,0 +1,118 @@
+{
+	"name": "p_extract_sf_attachments",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup_Attachment_List",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SalesforceV2Source",
+						"query": {
+							"value": "@concat('SELECT Id, ParentId, Name FROM Attachment WHERE Parent.Type = ''', pipeline().parameters.ObjectName, '''')",
+							"type": "Expression"
+						},
+						"includeDeletedObjects": false,
+						"partitionOption": "AutoDetect",
+						"preserveScaleFromSchema": false
+					},
+					"dataset": {
+						"referenceName": "DS_Salesforce_Object_Dynamic",
+						"type": "DatasetReference",
+						"parameters": {
+							"ObjectName": "Attachment"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup_Attachment_List",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup_Attachment_List').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_Binary_File",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "RestSource",
+									"httpRequestTimeout": "00:01:40",
+									"requestInterval": "00.00:00:00.010",
+									"requestMethod": "GET",
+									"paginationRules": {
+										"supportRFC5988": "true"
+									}
+								},
+								"sink": {
+									"type": "BinarySink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "DS_Salesforce_Attachment_REST",
+									"type": "DatasetReference",
+									"parameters": {
+										"AttachmentId": "@item().Id"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_ADLS_Bronze_Unstructured",
+									"type": "DatasetReference",
+									"parameters": {
+										"ObjectName": "@pipeline().parameters.ObjectName",
+										"ParentId": "@item().ParentId",
+										"FileName": "@item().Name"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"ObjectName": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	}
+}

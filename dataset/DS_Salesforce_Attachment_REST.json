@@ -1,0 +1,20 @@
+{
+	"name": "DS_Salesforce_Attachment_REST",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_Salesforce_REST",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"AttachmentId": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": "/services/data/v52.0/sobjects/Attachment/@{dataset().AttachmentId}/Body"
+		},
+		"schema": []
+	}
+}
