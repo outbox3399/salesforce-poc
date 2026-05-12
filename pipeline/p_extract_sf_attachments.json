@@ -5,7 +5,14 @@
 			{
 				"name": "Lookup_Attachment_List",
 				"type": "Lookup",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Get_SF_Token",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -67,12 +74,17 @@
 							"userProperties": [],
 							"typeProperties": {
 								"source": {
-									"type": "RestSource",
-									"httpRequestTimeout": "00:01:40",
-									"requestInterval": "00.00:00:00.010",
-									"requestMethod": "GET",
-									"paginationRules": {
-										"supportRFC5988": "true"
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "HttpReadSettings",
+										"requestMethod": "GET",
+										"additionalHeaders": {
+											"value": "Authorization: Bearer @{activity('Get_SF_Token').output.access_token}",
+											"type": "Expression"
+										}
+									},
+									"formatSettings": {
+										"type": "BinaryReadSettings"
 									}
 								},
 								"sink": {
@@ -85,7 +97,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "DS_Salesforce_Attachment_REST",
+									"referenceName": "DS_Salesforce_Attachment_Binary_HTTP",
 									"type": "DatasetReference",
 									"parameters": {
 										"AttachmentId": "@item().Id"
@@ -105,6 +117,30 @@
 							]
 						}
 					]
+				}
+			},
+			{
+				"name": "Get_SF_Token",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": true,
+					"secureInput": true
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/x-www-form-urlencoded"
+					},
+					"url": "https://orgfarm-fc8c4b2384-dev-ed.develop.my.salesforce.com/services/oauth2/token",
+					"body": {
+						"value": "grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=DUMMY_TEXT",
+						"type": "Expression"
+					}
 				}
 			}
 		],
