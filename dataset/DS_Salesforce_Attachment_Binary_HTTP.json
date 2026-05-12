@@ -16,7 +16,7 @@
 			"location": {
 				"type": "HttpServerLocation",
 				"relativeUrl": {
-					"value": "@concat('/services/data/v52.0/sobjects/Attachment/', dataset().AttachmentId, '/Body')",
+					"value": "@concat('/services/data/v52.0/sobjects/ContentVersion/', dataset().AttachmentId, '/VersionData')",
 					"type": "Expression"
 				}
 			}
