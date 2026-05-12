@@ -122,7 +122,14 @@
 			{
 				"name": "Get_SF_Token",
 				"type": "WebActivity",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Get_AKV_Secret",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -138,8 +145,32 @@
 					},
 					"url": "https://orgfarm-fc8c4b2384-dev-ed.develop.my.salesforce.com/services/oauth2/token",
 					"body": {
-						"value": "grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=DUMMY_TEXT",
+						"value": "@concat('grant_type=client_credentials&client_id=3MVG9VMBZCsTL9hkFslzrKTFSy3.9Tl4k4It_avkIVQWcATKwPjoLMZoudRzGldyNqfOl.JWXWll3rx7ULPFl&client_secret=', activity('Get_AKV_Secret').output.value)",
 						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Get_AKV_Secret",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": true,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": {
+						"value": "https://pockeyvaultdiageo.vault.azure.net/secrets/sf-client-secret?api-version=7.0",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net"
 					}
 				}
 			}
