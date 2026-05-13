@@ -25,7 +25,7 @@
 					"source": {
 						"type": "SalesforceV2Source",
 						"query": {
-							"value": "SELECT Id, PathOnClient, FirstPublishLocationId FROM ContentVersion WHERE IsLatest = true",
+							"value": "@concat('SELECT ContentDocumentId, ContentDocument.LatestPublishedVersionId, ContentDocument.Title FROM ContentDocumentLink WHERE LinkedEntityId IN (SELECT Id FROM ', pipeline().parameters.ObjectName, ')')",
 							"type": "Expression"
 						},
 						"includeDeletedObjects": false,
@@ -36,7 +36,7 @@
 						"referenceName": "DS_Salesforce_Object_Dynamic",
 						"type": "DatasetReference",
 						"parameters": {
-							"ObjectName": "ContentVersion"
+							"ObjectName": "ContentDocumentLink"
 						}
 					},
 					"firstRowOnly": false
