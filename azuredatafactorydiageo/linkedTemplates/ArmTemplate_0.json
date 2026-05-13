@@ -116,6 +116,47 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DS_ADLS_Bronze_Unstructured')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_ADLSGen2",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"ObjectName": {
+						"type": "string"
+					},
+					"ParentId": {
+						"type": "string"
+					},
+					"FileName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@concat('bronze/unstructured/', dataset().ObjectName, '/', dataset().ParentId)",
+							"type": "Expression"
+						},
+						"fileSystem": "datalake"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_ADLSGen2')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DS_Metadata_JSON')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -150,6 +191,36 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_ADLSGen2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_Salesforce_Attachment_Binary_HTTP')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_Salesforce_HTTP",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"AttachmentId": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation",
+						"relativeUrl": {
+							"value": "@concat('/services/data/v52.0/sobjects/ContentVersion/', dataset().AttachmentId, '/VersionData')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_Salesforce_HTTP')]"
 			]
 		},
 		{
@@ -209,50 +280,12 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DS_ADLS_Bronze_Unstructured')]",
+			"name": "[concat(parameters('factoryName'), '/DS_Salesforce_Attachment_REST')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "LS_ADLSGen2",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"ObjectName": {
-						"type": "string"
-					},
-					"ParentId": {
-						"type": "string"
-					},
-					"FileName": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "@dataset().FileName",
-						"folderPath": {
-							"value": "@concat('bronze/unstructured/', dataset().ObjectName, '/', dataset().ParentId)",
-							"type": "Expression"
-						},
-						"fileSystem": "datalake"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_ADLSGen2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_Salesforce_Attachment_Binary_HTTP')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_Salesforce_HTTP",
+					"referenceName": "LS_Salesforce_REST",
 					"type": "LinkedServiceReference"
 				},
 				"parameters": {
@@ -261,19 +294,17 @@
 					}
 				},
 				"annotations": [],
-				"type": "Binary",
+				"type": "RestResource",
 				"typeProperties": {
-					"location": {
-						"type": "HttpServerLocation",
-						"relativeUrl": {
-							"value": "@concat('/services/data/v52.0/sobjects/ContentVersion/', dataset().AttachmentId, '/VersionData')",
-							"type": "Expression"
-						}
+					"relativeUrl": {
+						"value": "/services/data/v52.0/sobjects/Attachment/@{dataset().AttachmentId}/Body",
+						"type": "Expression"
 					}
-				}
+				},
+				"schema": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_Salesforce_HTTP')]"
+				"[concat(variables('factoryId'), '/linkedServices/LS_Salesforce_REST')]"
 			]
 		},
 		{
@@ -302,31 +333,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_Salesforce')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_Salesforce_Attachment_REST')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_Salesforce_REST",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"AttachmentId": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "RestResource",
-				"typeProperties": {
-					"relativeUrl": "/services/data/v52.0/sobjects/Attachment/@{dataset().AttachmentId}/Body"
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_Salesforce_REST')]"
 			]
 		},
 		{
@@ -369,7 +375,7 @@
 								"referenceName": "DS_Salesforce_Object_Dynamic",
 								"type": "DatasetReference",
 								"parameters": {
-									"ObjectName": "Attachment"
+									"ObjectName": "ContentVersion"
 								}
 							},
 							"firstRowOnly": false

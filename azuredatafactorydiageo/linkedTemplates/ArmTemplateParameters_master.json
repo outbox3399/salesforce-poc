@@ -17,14 +17,14 @@
 		"LS_Salesforce_properties_typeProperties_clientId": {
 			"value": "3MVG9VMBZCsTL9hkFslzrKTFSy3.9Tl4k4It_avkIVQWcATKwPjoLMZoudRzGldyNqfOl.JWXWll3rx7ULPFl"
 		},
+		"LS_Salesforce_HTTP_properties_typeProperties_url": {
+			"value": "https://orgfarm-fc8c4b2384-dev-ed.develop.my.salesforce.com"
+		},
 		"LS_Salesforce_REST_properties_typeProperties_url": {
 			"value": "https://orgfarm-fc8c4b2384-dev-ed.develop.my.salesforce.com"
 		},
 		"LS_Salesforce_REST_properties_typeProperties_clientId": {
 			"value": "3MVG9VMBZCsTL9hkFslzrKTFSy3.9Tl4k4It_avkIVQWcATKwPjoLMZoudRzGldyNqfOl.JWXWll3rx7ULPFl"
-		},
-		"LS_Salesforce_HTTP_properties_typeProperties_url": {
-			"value": "https://orgfarm-fc8c4b2384-dev-ed.develop.my.salesforce.com"
 		},
 		"containerUri": {
 			"value": ""
