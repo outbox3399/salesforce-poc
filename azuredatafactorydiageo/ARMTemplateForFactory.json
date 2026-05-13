@@ -69,7 +69,7 @@
 							"source": {
 								"type": "SalesforceV2Source",
 								"query": {
-									"value": "SELECT Id, PathOnClient, FirstPublishLocationId FROM ContentVersion WHERE IsLatest = true",
+									"value": "SELECT Id, Name, ParentId FROM Attachment",
 									"type": "Expression"
 								},
 								"includeDeletedObjects": false,
@@ -80,7 +80,7 @@
 								"referenceName": "DS_Salesforce_Object_Dynamic",
 								"type": "DatasetReference",
 								"parameters": {
-									"ObjectName": "ContentVersion"
+									"ObjectName": "Attachment"
 								}
 							},
 							"firstRowOnly": false
