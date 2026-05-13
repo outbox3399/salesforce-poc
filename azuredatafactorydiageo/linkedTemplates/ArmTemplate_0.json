@@ -243,7 +243,7 @@
 						"secretName": "sf-client-secret",
 						"secretVersion": "7204ce8554a44433854540a83ca9a49d"
 					},
-					"apiVersion": "52.0",
+					"apiVersion": "53.0",
 					"authenticationType": "OAuth2ClientCredential"
 				}
 			},
