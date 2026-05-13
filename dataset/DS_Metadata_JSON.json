@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "metadataConfig.json",
+				"fileName": "metadata_config.json",
 				"fileSystem": "control-plane"
 			}
 		},
