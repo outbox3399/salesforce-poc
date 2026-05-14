@@ -69,7 +69,7 @@
 							"source": {
 								"type": "SalesforceV2Source",
 								"query": {
-									"value": "@concat('SELECT ContentDocumentId, ContentDocument.LatestPublishedVersionId, ContentDocument.Title FROM ContentDocumentLink WHERE LinkedEntityId IN (SELECT Id FROM ', pipeline().parameters.ObjectName, ')')",
+									"value": "@concat('SELECT ContentDocumentId, ContentDocument.LatestPublishedVersionId, ContentDocument.Title, LinkedEntityId FROM ContentDocumentLink WHERE LinkedEntityId IN (SELECT Id FROM ', pipeline().parameters.ObjectName, ')')",
 									"type": "Expression"
 								},
 								"includeDeletedObjects": false,
@@ -158,7 +158,7 @@
 											"parameters": {
 												"ObjectName": "@pipeline().parameters.ObjectName",
 												"ParentId": {
-													"value": "@item().FirstPublishLocationId",
+													"value": "@item().LinkedEntityId",
 													"type": "Expression"
 												},
 												"FileName": {
