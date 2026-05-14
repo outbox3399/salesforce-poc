@@ -101,7 +101,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"AttachmentId": {
-											"value": "item().ContentDocument.LatestPublishedVersionId",
+											"value": "@item()['ContentDocument.LatestPublishedVersionId']",
 											"type": "Expression"
 										}
 									}
@@ -118,7 +118,7 @@
 											"type": "Expression"
 										},
 										"FileName": {
-											"value": "@item().ContentDocument.Title",
+											"value": "@item()['ContentDocument.Title']",
 											"type": "Expression"
 										}
 									}
