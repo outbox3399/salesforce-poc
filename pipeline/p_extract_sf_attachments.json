@@ -100,7 +100,10 @@
 									"referenceName": "DS_Salesforce_Attachment_Binary_HTTP",
 									"type": "DatasetReference",
 									"parameters": {
-										"AttachmentId": "@item().Id"
+										"AttachmentId": {
+											"value": "item().ContentDocument.LatestPublishedVersionId",
+											"type": "Expression"
+										}
 									}
 								}
 							],
@@ -115,7 +118,7 @@
 											"type": "Expression"
 										},
 										"FileName": {
-											"value": "@item().PathOnClient",
+											"value": "@item().ContentDocument.Title",
 											"type": "Expression"
 										}
 									}
