@@ -1,0 +1,12 @@
+{
+	"name": "LS_Salesforce_HTTP",
+	"properties": {
+		"annotations": [],
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "https://orgfarm-fc8c4b2384-dev-ed.develop.my.salesforce.com",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}

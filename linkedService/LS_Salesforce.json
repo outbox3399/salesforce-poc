@@ -1,0 +1,23 @@
+{
+	"name": "LS_Salesforce",
+	"properties": {
+		"description": "This is the linked service created for salesforce",
+		"annotations": [],
+		"type": "SalesforceV2",
+		"typeProperties": {
+			"environmentUrl": "https://orgfarm-fc8c4b2384-dev-ed.develop.my.salesforce.com",
+			"clientId": "3MVG9VMBZCsTL9hkFslzrKTFSy3.9Tl4k4It_avkIVQWcATKwPjoLMZoudRzGldyNqfOl.JWXWll3rx7ULPFl",
+			"clientSecret": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "LS_AzureKeyVault",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "sf-client-secret",
+				"secretVersion": "7204ce8554a44433854540a83ca9a49d"
+			},
+			"apiVersion": "53.0",
+			"authenticationType": "OAuth2ClientCredential"
+		}
+	}
+}

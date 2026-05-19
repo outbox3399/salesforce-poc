@@ -1,0 +1,11 @@
+{
+	"name": "LS_AzureKeyVault",
+	"properties": {
+		"description": "This is the linked service for Azure Key vault to tell ADF where the Key Vault is.",
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://pockeyvaultdiageo.vault.azure.net/"
+		}
+	}
+}

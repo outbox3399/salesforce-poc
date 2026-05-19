@@ -1,0 +1,194 @@
+{
+	"name": "p_extract_sf_attachments",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup_Attachment_List",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Get_SF_Token",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SalesforceV2Source",
+						"query": {
+							"value": "@concat('SELECT ContentDocumentId, ContentDocument.LatestPublishedVersionId, ContentDocument.Title, LinkedEntityId FROM ContentDocumentLink WHERE LinkedEntityId IN (SELECT Id FROM ', pipeline().parameters.ObjectName, ')')",
+							"type": "Expression"
+						},
+						"includeDeletedObjects": false,
+						"partitionOption": "AutoDetect",
+						"preserveScaleFromSchema": false
+					},
+					"dataset": {
+						"referenceName": "DS_Salesforce_Object_Dynamic",
+						"type": "DatasetReference",
+						"parameters": {
+							"ObjectName": "ContentDocumentLink"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup_Attachment_List",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup_Attachment_List').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_Binary_File",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "HttpReadSettings",
+										"requestMethod": "GET",
+										"additionalHeaders": {
+											"value": "Authorization: Bearer @{activity('Get_SF_Token').output.access_token}",
+											"type": "Expression"
+										}
+									},
+									"formatSettings": {
+										"type": "BinaryReadSettings"
+									}
+								},
+								"sink": {
+									"type": "BinarySink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "DS_Salesforce_Attachment_Binary_HTTP",
+									"type": "DatasetReference",
+									"parameters": {
+										"AttachmentId": {
+											"value": "@item()['ContentDocument.LatestPublishedVersionId']",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_ADLS_Bronze_Unstructured",
+									"type": "DatasetReference",
+									"parameters": {
+										"ObjectName": "@pipeline().parameters.ObjectName",
+										"ParentId": {
+											"value": "@item().LinkedEntityId",
+											"type": "Expression"
+										},
+										"FileName": {
+											"value": "@item()['ContentDocument.Title']",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "Get_SF_Token",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Get_AKV_Secret",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": true,
+					"secureInput": true
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/x-www-form-urlencoded"
+					},
+					"url": "https://orgfarm-fc8c4b2384-dev-ed.develop.my.salesforce.com/services/oauth2/token",
+					"body": {
+						"value": "@concat('grant_type=client_credentials&client_id=3MVG9VMBZCsTL9hkFslzrKTFSy3.9Tl4k4It_avkIVQWcATKwPjoLMZoudRzGldyNqfOl.JWXWll3rx7ULPFl&client_secret=', activity('Get_AKV_Secret').output.value)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Get_AKV_Secret",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": true,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": {
+						"value": "https://pockeyvaultdiageo.vault.azure.net/secrets/sf-client-secret?api-version=7.0",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://vault.azure.net"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"ObjectName": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	}
+}

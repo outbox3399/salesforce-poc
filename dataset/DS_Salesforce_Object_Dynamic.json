@@ -1,0 +1,23 @@
+{
+	"name": "DS_Salesforce_Object_Dynamic",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_Salesforce",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ObjectName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SalesforceV2Object",
+		"schema": [],
+		"typeProperties": {
+			"objectApiName": {
+				"value": "@dataset().ObjectName",
+				"type": "Expression"
+			}
+		}
+	}
+}
