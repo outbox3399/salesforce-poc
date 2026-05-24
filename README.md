@@ -6,7 +6,7 @@ Follow the below steps to configure your ADF and Salesforce.
 We have to create a salesforce developer account using this URL - https://developer.salesforce.com/
 
 
-=================================================================================================================================================
+===================================================================================
 Keep the below data in the CONFIG FILE under "control-plane" container with the name metadata-config.json. We can add more objects names as an when required.
 
 [
@@ -23,7 +23,7 @@ Keep the below data in the CONFIG FILE under "control-plane" container with the 
     "HasAttachments": false
   }
 ]
-=================================================================================================================================================
+===================================================================================
 **FOR STRUCTURED DATA:**
 
 **CREATE PERMISSION SET**
@@ -42,7 +42,7 @@ Give it a clear label, such as Integration API Access. (Leave the "License" drop
 6. Immediately after clicking Save, you will be taken to the overview page for your new Permission Set. Scroll down on that page, and you will finally see the System section with the System Permissions link!
 From there, you can click System Permissions -> Edit -> check "API Enabled" -> Save.
 
-=================================================================================================================================================
+===================================================================================
 **Create the Integration User**
 Now, you will create the non-human user account that Azure Data Factory will use.
 1. In the Setup "Quick Find" box, type Users and select the Users menu item.
@@ -57,7 +57,7 @@ Now, you will create the non-human user account that Azure Data Factory will use
 6. Scroll to the bottom and ensure Generate new password and notify user immediately is checked.
 7. Click Save.
 
-=================================================================================================================================================
+===================================================================================
 
 
 **Phase 4: Create an External Client App (The 2026 Method)**
@@ -76,7 +76,7 @@ Now, you will create the non-human user account that Azure Data Factory will use
 4. Ensure the Enable Client Credentials Flow box is checked (Azure Data Factory specifically uses this authentication flow).
 5. Click Save or Create at the bottom.
 
-=================================================================================================================================================
+===================================================================================
 
 **3.Pre-Authorize Your Integration User:** Just like the old method, you need to tell Salesforce that your specific Integration User is allowed to use this app.
 1. Open your newly created External Client App.
@@ -86,7 +86,7 @@ Now, you will create the non-human user account that Azure Data Factory will use
 5. Now, Save it.
 6. On the same page, under App Policies >  scroll to Permission Sets section, click edit, and add the “Integration API Access” permission set you created earlier and click save.
 
-=================================================================================================================================================
+===================================================================================
 
 **4.Get Your Azure Data Factory Keys**
 1. Navigate to the Settings tab of your External Client App.
@@ -94,7 +94,7 @@ Now, you will create the non-human user account that Azure Data Factory will use
 3. Click on Consumer Key and Secret (Salesforce may email you a verification code to type in before revealing this screen).
 4. Copy your Consumer Key (Client ID) and Consumer Secret (Client Secret).
 
-=================================================================================================================================================
+===================================================================================
 **Create Connected APP:**
 Goto External client app in LHS > settings in LHS under “External Client App” > New connected app
 
@@ -128,7 +128,7 @@ The below steps needs to be checked. As this step don’t fit here
 5. Click Save.
 Once these steps are done, your Azure Data Factory pipeline will be fully authenticated, authorized, and ready to archive your data without that INVALID_TYPE error!
 
-=================================================================================================================================================
+===================================================================================
 
 **Create a sample data in salesforce for the POC using the below steps**
 
@@ -149,7 +149,7 @@ If you generate a mock dataset (using a tool like Mockaroo or Excel), you can up
 Tip for POCs: Start by importing just Accounts. Once they are in, you can extract them via ADF to ensure the pipeline logic (Bronze -> Raw extract, partitioning) works before spending time linking bulk Contacts or Opportunities.
 
 
-=================================================================================================================================================
+===================================================================================
 
 **Step 1: Create the Linked Service**
 1. Open your Azure Data Factory Studio.
@@ -168,8 +168,8 @@ This is where most people get confused because the names in Salesforce don't per
 6. Salesforce API version = 53.0
 
 
-=================================================================================================================================================
-=================================================================================================================================================
+===================================================================================
+===================================================================================
 **Key Vault - Service**
 **1. Create the key vault first**
 
@@ -189,7 +189,7 @@ Here is the step-by-step guide to fixing this so you can add your Salesforce cre
     * Click on your name so it appears in the "Selected members" section below, then click the Select button.
 6. Review and Assign: Click the Review + assign button at the bottom, and then click it one more time to confirm.
 7. Wait and Refresh: As the yellow warning box in your screenshot mentions, RBAC changes can take a minute or two to propagate. Wait about 60 seconds, go back to the Secrets blade on the left, and click the Refresh button at the top.
-=================================================================================================================================================
+===================================================================================
 
 **Phase 1: Storing Secrets in Azure Key Vault**
 You need to store your sensitive connection details as "Secrets" within the Key Vault.
@@ -207,7 +207,7 @@ S**tep-by-step to add a secret:**
 * Name: Salesforce-Client-Secret | Value: The consumer secret from your Salesforce Connected App.
 * Name: ADLS-Connection-String | Value: The full connection string for your ADLS Gen2 storage account (found under "Access keys" in the Storage Account).
 
-=================================================================================================================================================
+===================================================================================
 
 **Phase 2: Granting ADF Access to the Key Vault**
 Before ADF can read these secrets, you must give it permission. Azure uses Managed Identities to do this securely.
@@ -220,7 +220,7 @@ Step-by-step to grant access:
 6. A panel will slide out. Under "Managed identity", select Data Factory (V2), and click on the name of your specific ADF instance.
 7. Click Select, then Review + assign.
 
-=================================================================================================================================================
+===================================================================================
 
 **Phase 3: Create the Key Vault Linked Service in ADF**
 Now you must tell ADF where the Key Vault is.
@@ -236,7 +236,7 @@ Step-by-step to link the Key Vault:
 9. Click Test connection (it should succeed because of Phase 2).
 10. Click Create.
 
-=================================================================================================================================================
+===================================================================================
 
 **Phase 4: Using the Key Vault in your Pipeline Linked Services**
 Finally, you will configure your Salesforce and ADLS Linked Services to fetch passwords directly from the Key Vault.
@@ -249,7 +249,7 @@ A. Configuring the Salesforce Linked Service:
 6. Repeat this process for the Security Token and Client Secret fields, pointing them to their respective secret names in the Key Vault.
 7. Click Test connection and Create.
 
-=================================================================================================================================================
+===================================================================================
 **ADLS Gen2 Storage Account Linked Service** 
 
 **Step 1: Give ADF permission on the Storage Account**
@@ -267,7 +267,7 @@ A. Configuring the Salesforce Linked Service:
 4. Select your Azure Subscription and Storage account name from the dropdowns.
 5. Click Test connection and Create.
 
-=================================================================================================================================================
+===================================================================================
 
 The next major step is to create Datasets and build the Main Archival Pipeline that will read your JSON file and loop through the Salesforce objects.
 Because you are using a metadata-driven approach, we will use Parameterized Datasets. This means instead of creating 40 different datasets for 40 Salesforce objects, you only create one dataset and pass the object name to it dynamically.
@@ -307,7 +307,7 @@ Here is exactly how to fill out that section based on the screenshot you shared:
 2. Second Box (currently contains /@dataset().FolderPath): You have already added the dynamic content correctly here! However, you should remove the forward slash (/) that you typed before @dataset().FolderPath. The UI already adds a slash between the boxes automatically. Just leave it as exactly @dataset().FolderPath.
 3. Third Box (currently shows placeholder "File name"): Leave this entirely blank. Because we are generating a dynamic folder path and writing Parquet files, ADF will automatically generate a unique file name for the output data inside that folder.
 
-=================================================================================================================================================
+===================================================================================
 
 **Phase 2: Build the Main Archival Pipeline (The Orchestrator)**
 Now we will build the pipeline that reads the JSON and loops through the objects.
@@ -335,7 +335,8 @@ Now we will build the pipeline that reads the JSON and loops through the objects
     * Sink dataset: Select DS_ADLS_Bronze_Dynamic.
     * Dataset properties (FolderPath): Click Add dynamic content. To match the folder structure in your architecture (Bronze / Structured / <Object Name> / Year / Month), use this expression: @concat('bronze/structured/', item().ObjectName, '/', formatDateTime(utcNow(), 'yyyy/MM'))
 
-=================================================================================================================================================
+===================================================================================
+
 **We will encounter an error in salesforce related to permission set. Use the below steps to resolve it.**
 **Why this error is happening**
 To save money and increase security, Salesforce recently created the "Salesforce Integration" user license specifically for API users (like your Azure Data Factory). However, by default, the base version of this license is "locked down" and is not allowed to access standard CRM objects like Accounts, Contacts, or Opportunities.
@@ -358,9 +359,9 @@ Step 2: Update the Permission Set Now that the user is officially allowed to see
 5. Click Save.
 You will no longer get that red error screen, and Azure Data Factory will finally be fully authorized to read your Account data!
 
-=================================================================================================================================================
-=================================================================================================================================================
-=================================================================================================================================================
+===================================================================================
+===================================================================================
+===================================================================================
 
 **FOR UNSTRUCTURED DATA:** pdf, csv, image etc
 
@@ -372,7 +373,7 @@ You will no longer get that red error screen, and Azure Data Factory will finall
 5. Click on Upload files > select document e.g. CSV or PDF etc and click upload.
 6. Similarly, add more attachments in other accounts as well.
 
-=================================================================================================================================================
+===================================================================================
 
 Handling files is very different from handling rows of data. In Salesforce, attachments aren't stored inside the Account table itself; they are stored in a separate system object (traditionally called Attachment). Furthermore, Azure Data Factory (ADF) has a strict rule: you cannot put a ForEach loop inside another ForEach loop.
 Because your main pipeline is already looping through the Objects (Account, Contact), we must build a Child Pipeline specifically for attachments.
@@ -389,7 +390,7 @@ The standard Salesforce connector we used earlier is designed for extracting tab
 6. Client ID: Paste your Consumer Key (from your ADF Integration Manoj app).
 7. Client secret: Use Azure Key Vault and select your secret.
 8. Click Test connection and Create.
-=================================================================================================================================================
+===================================================================================
 
 **Phase 2: Create the Binary Datasets**
 We need datasets that understand raw files (like PDFs and Images) instead of Parquet files.
@@ -413,7 +414,8 @@ We need datasets that understand raw files (like PDFs and Images) instead of Par
     * File name: @dataset().FileName
 
 
-=================================================================================================================================================
+===================================================================================
+
 **Phase 3: Build the Attachment Child Pipeline**
 This pipeline will take an Object Name (like "Account"), find all its attachments, and download them.
 1. Go to + -> Pipeline -> Pipeline. Name it p_extract_sf_attachments.
@@ -446,7 +448,7 @@ Now we just tell your main pipeline to trigger this new child pipeline whenever 
     * Invoked pipeline: Select p_extract_sf_attachments.
     * Expand the Parameters section. For the ObjectName parameter, click Add dynamic content and enter: @item().ObjectName
 
-=================================================================================================================================================
+===================================================================================
 
 **Why this error happened:**
 ADF has a hard rule: If your destination (Sink) is a Binary dataset (raw files like PDFs, Images, etc.), your Source must also be a Binary dataset. The REST connector we used earlier is specifically designed to parse structured JSON/XML data. Because it isn't classified as a "Binary" source, ADF blocks the pairing. To download raw files, we must use the HTTP Connector instead of the REST connector.
@@ -495,7 +497,7 @@ Finally, we swap out the source in your Copy Activity and pass it the token.
 **Step 4: Publish and Test!**
 Because both the Source and Sink are now classified as "Binary", that validation error will instantly disappear.
 
-=================================================================================================================================================
+===================================================================================
 
 **Step 1: Remove the Hardcoded Secret**
 Let's get this saving successfully right now so you don't lose your work.
@@ -526,7 +528,9 @@ Now we pass the hidden secret from Activity 1 into Activity 2.
 Click Publish All. Your pipeline is now enterprise-grade and 100% compliant with security policies. You can now safely trigger your debug run to test the unstructured data extraction!
 
 The pipeline will fail after following above steps. 
-=================================================================================================================================================
+
+===================================================================================
+
 **Rewrite and correct the below:**
 
 our pipeline ran perfectly. If you look at your first screenshot, your ForEach activity succeeded but only took 2 seconds to run. This means the Lookup activity successfully queried Salesforce, but Salesforce returned 0 records. The loop ran zero times, which is why your pipeline succeeded but no folder was created.
@@ -557,7 +561,7 @@ To make this enterprise-ready, we need to point your pipeline to the modern Cont
 Test It Again!
 Click Publish All, and then hit Debug.
 
-=================================================================================================================================================
+===================================================================================
 
 **Unstructured Folder is not getting created, we have to provide permission by checking the checkbox of “Query All Files”. However, this is not visible under the permission set “Integration_API_Access”. Below is the reason.**
 
@@ -589,7 +593,7 @@ Step 3: Assign it to your ADF User
 The Final Test!
 Your integration user now has the admin-level file visibility required.
 
-=================================================================================================================================================
+===================================================================================
 
 **#ISSUE which I encountered:**
 
@@ -613,7 +617,7 @@ It is very important to remember the split we made at the very end of our sessio
 * Integration_API_Access handles the tables, rows, columns, and write-backs.
 * Integration_File_Access (the second permission set we created with No License) handles the Unstructured Data. It contains the "Query All Files" system permission that allows your child pipeline (p_extract_sf_attachments) to see and download the physical PDFs, CSVs, and images from the ContentVersion table.
 
-=================================================================================================================================================
+===================================================================================
 
 **Questions raised:
 can't we use "Integration_File_Access" permission set to handle everything for structured and unstructured?
@@ -632,7 +636,7 @@ In modern Salesforce architecture, the golden rule is Composable Security (creat
 
 **Finally, Keeping two permission sets separately. One for structured data and another for unstructured data.**
 
-=================================================================================================================================================
+===================================================================================
 
 **Step 1: Create the "No-License" Permission Set**
 First, we create the container. The secret here is leaving the license blank so Salesforce doesn't hide any system permissions from us.
@@ -662,7 +666,7 @@ Instead of "Query All Files", you can grant the master "View All Data" permissio
 3. Check the box for View All Data.
 4. Click Save.
 
-=================================================================================================================================================
+===================================================================================
 
 I**n Salesforce, Assign the Key to your ADF User**
 Now we need to hand this new key to the Azure Data Factory user account so it can use it alongside your API key.
@@ -674,7 +678,7 @@ Now we need to hand this new key to the Azure Data Factory user account so it ca
 6. Select it and click the Add arrow (the right-pointing triangle) to move it to the right column (Enabled Permission Sets).
     * Note: Ensure your original Integration_API_Access is also sitting in that right column. The user needs to hold both!
 7. Click Save.
-=================================================================================================================================================
+===================================================================================
 
 **Still we are unable to see the UNSTRUCTURED folder. Therefore, we are doing the below steps by giving highest privilege as “Modify All Data” in salesforce.**
 
@@ -687,7 +691,7 @@ Let's apply the master key to the permission set you already have.
 5. Click Save at the top of the screen.
 
 
-=================================================================================================================================================
+===================================================================================
 
 **Suspect 1: The "Wrong User" Linked Service**
 We spent a lot of time forging the ultimate master key for your Factory, Azure Data user. But we need to make absolutely sure Azure Data Factory is actually using that specific user to run the Lookup query.
@@ -717,7 +721,7 @@ We need to tell your Salesforce Connected App to physically adopt the identity o
 7. Look for the Run As field. Click the magnifying glass and select your Factory, Azure Data user.
 8. Click Save.
 
-=================================================================================================================================================
+===================================================================================
 This is a massive breakthrough! Your screenshot perfectly confirms that the identity crisis is officially solved.
 Before you made this change, Salesforce was basically saying: "I see a valid Client ID, but I don't know which user this is, so I'm giving it zero file permissions."
 Now, every time Azure Data Factory knocks on the door, Salesforce will say: "Ah, I see this is the Azure Data Factory user. This user has the 'Modify All Data' master key and the 'CRM Content User' badge. Let them see everything!"
@@ -731,7 +735,7 @@ Since we temporarily changed the query to Attachment in the last step just to te
 5. Change your Query back to our modern file query: SELECT Id, PathOnClient, FirstPublishLocationId FROM ContentVersion WHERE IsLatest = true
 6. Click Publish All.
 
-=================================================================================================================================================
+===================================================================================
 
 **Followup question: I am seeing this under "Connected Apps OAuth Usage", I don't see "Azure Data Factory connected app."**
 
@@ -757,7 +761,7 @@ Now we will make that tiny change to your Linked Service to force ADF to realize
 2. Go back to your parent pipeline (p_sf_to_adls_archival).
 3. Click Debug.
 
-=================================================================================================================================================
+===================================================================================
 
 Okay, Salesforce is officially guarding this file like it's the gold in Fort Knox! You have uncovered one of the most stubborn security limitations in the entire Salesforce architecture.
 The error in your screenshot confirms that Salesforce flat-out refuses to let ContentDocumentLink exist inside any parenthesis (a semi-join), period. It doesn't matter if we query ContentVersion or ContentDocument—Salesforce blocks it.
@@ -780,7 +784,7 @@ SELECT ContentDocumentId, ContentDocument.LatestPublishedVersionId, ContentDocum
 
 **@concat('SELECT ContentDocumentId, ContentDocument.LatestPublishedVersionId, ContentDocument.Title FROM ContentDocumentLink WHERE LinkedEntityId IN (SELECT Id FROM ', pipeline().parameters.ObjectName, ')')**
 
-=================================================================================================================================================
+===================================================================================
 **The below is also an issue which was not fixed.**
 
 It means our "backdoor" query was a 100% success. The Lookup activity successfully bypassed Salesforce security, grabbed the file metadata, and handed it directly to your ForEach loop.
@@ -809,7 +813,7 @@ Your Copy Activity also uses a dynamic expression to name the file when it lands
 2. Go back to your parent pipeline (p_sf_to_adls_archival).
 3. Hit Debug one last time.
 
-=================================================================================================================================================
+===================================================================================
 
 **The error message gives us the exact answer: property 'FirstPublishLocationId' doesn't exist.**
 Because we completely changed our SOQL query to query the ContentDocumentLink table instead of the buggy ContentVersion table, the column FirstPublishLocationId is no longer being returned by Salesforce.
@@ -836,7 +840,7 @@ Step 3: Publish and Debug
 1. Click Publish All to save these two changes.
 2. Go back to your parent pipeline and hit Debug.
 
-=================================================================================================================================================
+===================================================================================
 
 **The pipeline again failed and below is the error message of Copy_Binary_File**
 
@@ -864,6 +868,6 @@ We just need to wrap those specific fields in brackets and single quotes.
 1. Click Publish All.
 2. Run the Debug from the parent pipeline.
 
-=================================================================================================================================================
+===================================================================================
 
 
